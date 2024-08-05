@@ -1,0 +1,48 @@
+import numpy as np
+
+# Dataset
+X = np.array([
+    [2, 1],
+    [3, 2],
+    [4, 3],
+    [5, 4]
+])
+Y = np.array([0, 0, 1, 1])
+
+# Parameters
+learning_rate = 0.1
+n_iterations = 10
+
+# Adding a column of ones to X for the bias term
+X = np.hstack((np.ones((X.shape[0], 1)), X))
+
+# Initialize weights
+weights = np.zeros(X.shape[1])
+
+# Perceptron Learning Algorithm
+for _ in range(n_iterations):
+    for i in range(X.shape[0]):
+        # Calculate the linear combination of inputs and weights
+        linear_output = np.dot(X[i], weights)
+        # Apply the step function
+        predicted_label = 1 if linear_output >= 0 else 0
+        # Update weights if the prediction is wrong
+        weights += learning_rate * (Y[i] - predicted_label) * X[i]
+
+print(f"Final weights: {weights}")
+
+# Predict function
+def predict(X):
+    X = np.hstack((np.ones((X.shape[0], 1)), X))
+    linear_output = np.dot(X, weights)
+    return np.where(linear_output >= 0, 1, 0)
+
+# Example prediction
+new_data = np.array([[4, 2]])
+prediction = predict(new_data)
+print(f"Prediction for {new_data}: {prediction}")
+
+# Testing on the training data
+predictions = predict(X[:, 1:])
+print(f"Predictions on training data: {predictions}")
+print(f"Actual labels: {Y}")
